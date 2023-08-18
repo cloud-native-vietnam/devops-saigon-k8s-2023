@@ -1,5 +1,7 @@
 # Kubernetes 101
 
+[slides](./slides.pdf)
+
 ## Roll Out Demo
 
 Recording:
