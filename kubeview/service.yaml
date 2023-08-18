@@ -1,0 +1,24 @@
+---
+# Source: kubeview/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubeview
+  namespace: kubeview
+  labels:
+    app.kubernetes.io/name: kubeview
+    helm.sh/chart: kubeview-0.1.31
+    app.kubernetes.io/instance: kubeview
+    app.kubernetes.io/version: "0.1.31"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: kubeview
+    app.kubernetes.io/instance: kubeview
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+      nodePort: 30080
+      protocol: TCP

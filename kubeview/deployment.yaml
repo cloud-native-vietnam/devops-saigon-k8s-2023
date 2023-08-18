@@ -1,0 +1,52 @@
+---
+# Source: kubeview/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubeview
+  namespace: kubeview
+  labels:
+    app.kubernetes.io/name: kubeview
+    helm.sh/chart: kubeview-0.1.31
+    app.kubernetes.io/instance: kubeview
+    app.kubernetes.io/version: "0.1.31"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kubeview
+      app.kubernetes.io/instance: kubeview
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kubeview
+        app.kubernetes.io/instance: kubeview
+    spec:
+      serviceAccountName: kubeview
+      containers:
+        - name: kubeview
+          image: "ghcr.io/benc-uk/kubeview:0.1.31"
+          imagePullPolicy: Always
+          env:
+            - name: IN_CLUSTER
+              value: "true"
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi

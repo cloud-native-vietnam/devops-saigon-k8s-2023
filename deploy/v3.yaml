@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-bootcamp
+  labels:
+    app: kubernetes-bootcamp
+  namespace: default
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: kubernetes-bootcamp
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: kubernetes-bootcamp
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - kubernetes-bootcamp
+                topologyKey: "kubernetes.io/hostname"
+              weight: 100
+      containers:
+        - name: kubernetes-bootcamp
+          image: localhost:5000/kubernetes-bootcamp:v3
+          imagePullPolicy: Always
+          env:
+            # downwards API
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          ports:
+            - name: http
+              containerPort: 8081
+          # liveness
+          livenessProbe:
+            httpGet:
+              path: /health-check/liveness
+              port: http
+          # readiness
+          readinessProbe:
+            httpGet:
+              path: /health-check/readiness
+              port: http
+      restartPolicy: Always
