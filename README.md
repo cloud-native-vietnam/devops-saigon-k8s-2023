@@ -2,7 +2,9 @@
 
 ## Roll Out Demo
 
-[recording](https://youtu.be/rHm1v6QsTkA)
+Recording:
+
+[![Watch the video](https://img.youtube.com/vi/rHm1v6QsTkA/default.jpg)](https://youtu.be/rHm1v6QsTkA)
 
 ```sh
 make build-all
